@@ -16,10 +16,15 @@ class Product extends Model
         'price',
         'brand_id',
         'qty',
+        'description',
     ];
 
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
 }

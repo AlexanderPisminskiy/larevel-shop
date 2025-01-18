@@ -13,12 +13,22 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all(); // Получает все продукты
-//        foreach ($products as $product) {
-//            dump($product->name);
-//        }
-//        die();
-        return view('products.index', compact('products'));
+        $imageList = [];
+        $products = Product::with('brand', 'images')->get();
+        foreach ($products as $product) {
+            if (count($product->images) > 0) {
+                foreach ($product->images as $image) {
+                    if ($image !== null) {
+                        $imageList[] = $image->image;
+                        break;
+                    }
+                }
+            } else {
+                $imageList[] = 'image/noimage.png';
+            }
+
+        }
+        return view('products.index', compact('products', 'imageList'));
     }
 
     /**
@@ -54,6 +64,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $product->load('brand', 'images'); // Загрузка связанных данных
         return view('products.show', compact('product'));
     }
 
